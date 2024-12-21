@@ -47,9 +47,9 @@ fn sum_received_shares(received_shares: &[i32]) -> i32 {
 
 pub fn addictive_sharing() {
     // Each person's inputs
-    let alice_input = 10;
-    let bob_input = 13;
-    let chris_input = 22;
+    let alice_input = 20;
+    let bob_input = 15;
+    let chris_input = 30;
 
     let alice_shares = share(alice_input, 3);
     let bob_shares = share(bob_input, 3);
