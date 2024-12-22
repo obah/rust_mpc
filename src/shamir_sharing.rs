@@ -159,11 +159,75 @@ fn share(x: i32, n: usize) -> (Vec<i32>, Vec<i32>) {
 }
 
 pub fn shamir_sharing() {
-    let result = share(5, 3);
+    // addition operation
+    let shares1 = share(5, 3);
+    let shares2 = share(2, 3);
 
-    let shares = result.0;
-    let polynomial = result.1;
+    let shares1_values = shares1.0;
+    let polynomial1 = shares1.1;
 
-    println!("Polynomial: {}", polynomial_print(&polynomial));
-    plot(&[shares], &[polynomial], "plot2");
+    let shares2_values = shares2.0;
+    let polynomial2 = shares2.1;
+
+    let combined_shares: Vec<i32> = shares1_values
+        .iter()
+        .zip(shares2_values.iter())
+        .map(|(s1, s2)| calc_mod(s1 + s2))
+        .collect();
+
+    let combined_polynomial: Vec<i32> = polynomial1
+        .iter()
+        .zip(polynomial2.iter())
+        .map(|(p1, p2)| calc_mod(p1 + p2))
+        .collect();
+
+    // Print the polynomials
+    println!("Polynomial 1: {}", polynomial_print(&polynomial1));
+    println!("Polynomial 2: {}", polynomial_print(&polynomial2));
+    println!(
+        "Combined Polynomial: {}",
+        polynomial_print(&combined_polynomial)
+    );
+
+    // Plot the shares and polynomials
+    plot(
+        &[shares1_values, shares2_values, combined_shares.clone()],
+        &[polynomial1, polynomial2, combined_polynomial.clone()],
+        "plot4",
+    );
+
+    //multiplication operation
+    let shares3 = share(5, 2);
+    let shares4 = share(2, 2);
+
+    let shares3_values = shares3.0;
+    let polynomial3 = shares3.1;
+
+    let shares4_values = shares4.0;
+    let polynomial4 = shares4.1;
+
+    // Combine shares using multiplication and mod
+    let combined_shares2: Vec<i32> = shares3_values
+        .iter()
+        .zip(shares4_values.iter())
+        .map(|(s1, s2)| calc_mod(s1 * s2))
+        .collect();
+
+    // Combine polynomials using polynomial multiplication
+    let combined_polynomial2 = polynomial_multiply(&polynomial3, &polynomial4);
+
+    // Print the polynomials
+    println!("Polynomial 3: {}", polynomial_print(&polynomial3));
+    println!("Polynomial 4: {}", polynomial_print(&polynomial4));
+    println!(
+        "Combined Polynomial 2: {}",
+        polynomial_print(&combined_polynomial2)
+    );
+
+    // Plot the shares and polynomials
+    plot(
+        &[shares3_values, shares4_values, combined_shares2.clone()],
+        &[polynomial3, polynomial4, combined_polynomial2.clone()],
+        "plot5",
+    );
 }
